@@ -1,6 +1,7 @@
 var express = require("express");
 var bodyParser = require("body-parser");
 var logger = require("morgan");
+var exphbs = require("express-handlebars");
 
 var PORT = process.env.PORT || 3000;
 //Initialize our express server
@@ -14,6 +15,12 @@ app.use(bodyParser.json());
 app.use(logger("dev"));
 //Set up a public directory
 app.use(express.static("public"));
+
+app.engine("handlebars", exphbs({
+  defaultLayout: "main"
+}));
+app.set("view engine", "handlebars");
+
 
 //Initialize routes
 require("./routes/html-routes")(app);

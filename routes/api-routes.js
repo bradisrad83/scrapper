@@ -1,7 +1,7 @@
 var request = require("request");
 var cheerio = require("cheerio");
-var mongoose = require("mongoose");
-
+var db = require("../config/connection");
+//console.log(db);
 
 module.exports = function(app) {
   //GET request to scrape the l4lm website
@@ -18,6 +18,16 @@ module.exports = function(app) {
         result.link = $(this).children("a").attr("href");
         //push results into results
         results.push(result);
+
+        var entry = new db.myModels.Article(result);
+
+        entry.save(function(err, doc){
+          if(err) {
+            console.log(err);
+          }else {
+            console.log(doc);
+          }
+        });
       });
       console.log(results);
     });
