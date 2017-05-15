@@ -1,35 +1,25 @@
 var express = require("express");
 var bodyParser = require("body-parser");
 var logger = require("morgan");
-var mongoose = require("mongoose");
-var request = require("request");
-var cheerio = require("cheerio");
 
-// Set mongoose to leverage built in JavaScript ES6 Promises
-mongoose.Promise = Promise;
-
-// Initialize Express
+var PORT = process.env.PORT || 3000;
+//Initialize our express server
 var app = express();
-
-// Use morgan and body parser with our app
-app.use(logger("dev"));
+//Initialize body-parser
 app.use(bodyParser.urlencoded({
   extended: false
 }));
-
-// Make public a static dir
+app.use(bodyParser.json());
+//Initialize Morgan
+app.use(logger("dev"));
+//Set up a public directory
 app.use(express.static("public"));
 
-// Database configuration with mongoose
-mongoose.connect("mongodb://localhost/mongoosearticles");
-var db = mongoose.connection;
+//Initialize routes
+require("./routes/html-routes")(app);
+require("./routes/api-routes")(app);
 
-// Show any mongoose errors
-db.on("error", function(error) {
-  console.log("Mongoose Error: ", error);
-});
-
-// Once logged in to the db through mongoose, log a success message
-db.once("open", function() {
-  console.log("Mongoose connection successful.");
+//Listen to either our environment port of on 3000
+app.listen(PORT, function() {
+  console.log(`App running on port: ${PORT}`);
 });
