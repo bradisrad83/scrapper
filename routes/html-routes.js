@@ -11,7 +11,9 @@ module.exports = function(app) {
         console.log(err);
       } else {
         console.log(doc);
-        res.render("index", doc);
+        res.render("index", {
+          docs: doc
+        });
       }
     });
   });
