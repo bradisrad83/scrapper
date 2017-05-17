@@ -4,6 +4,21 @@ var db = require("../config/connection");
 //console.log(db);
 
 module.exports = function(app) {
+  app.put("/:id", function(req, res) {
+    var savedId = req.params.id;
+    db.myModels.Article.findOneAndUpdate({
+      "_id": savedId
+    }, {
+      "saved": true
+    }, function(err, doc) {
+      if (err) {
+        console.log(err);
+        return res.status(500).end();
+      }
+      res.status(200).json({success: true});
+    });
+
+  });
   //GET request to scrape the l4lm website
   app.get("/scrape", function(req, res) {
     //grab the body of the html with request
@@ -21,16 +36,16 @@ module.exports = function(app) {
 
         var entry = new db.myModels.Article(result);
 
-        entry.save(function(err, doc){
-          if(err) {
+        entry.save(function(err, doc) {
+          if (err) {
             console.log(err);
-          }else {
-            console.log(doc);
+          } else {
+            //console.log(doc);
           }
         });
       });
-      console.log(results);
+      //console.log(results);
+      res.redirect("/populate");
     });
-    res.send("SCRAPING COMPLETE");
   });
 };
