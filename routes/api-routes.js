@@ -4,6 +4,14 @@ var db = require("../config/connection");
 //console.log(db);
 
 module.exports = function(app) {
+  app.post("/savenote/:id", function(req, res){
+    var savedId = req.params.id;
+    db.myModels.Note.findOneAndUpdate({
+      "_id": savedId
+    },{
+      title: res.body
+    });
+  });
   //Route for saving articles
   app.put("/:id", function(req, res) {
     var savedId = req.params.id;
