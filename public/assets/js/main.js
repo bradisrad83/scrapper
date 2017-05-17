@@ -13,8 +13,4 @@ $(document).ready(function() {
       }
     });
   });
-  $(".addNote").on("click", function(event){
-    console.log("hitting note");
-    $("#myModal").modal("show");
-  });
 });

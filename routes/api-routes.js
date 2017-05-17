@@ -4,6 +4,7 @@ var db = require("../config/connection");
 //console.log(db);
 
 module.exports = function(app) {
+  //Route for saving articles
   app.put("/:id", function(req, res) {
     var savedId = req.params.id;
     db.myModels.Article.findOneAndUpdate({
