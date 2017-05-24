@@ -9,22 +9,27 @@ $(document).ready(function() {
     }).done(function(data) {
       if (data.success === true) {
         console.log("Saved Successfully");
-        btn.addClass("hidden");
+        //    btn.addClass("hidden");
       }
     });
   });
-  $(".saveNote").on("click", function(event){
+  $(".saveNote").on("click", function(event) {
     var btn = $(this);
     var id = btn.attr("data-id");
     var note = $(".note").val().trim();
-    //console.log(note);
-    $(".modal").hide();
+    console.log(note);
+    console.log(id);
     $.ajax({
-      url: "/savenote/"+ id,
-      method: "POST"
-    }).done(function(data){
-      if(data.success===true){
-        console.log("Note added");
+      url: "/savenote/" + id,
+      method: "POST",
+      data: {
+        title: "New Note",
+        body: note
+      }
+    }).done(function(note) {
+      if (note.success === true) {
+        console.log(note);
+        $(".modal").hide();
       }
     });
   });

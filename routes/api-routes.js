@@ -4,14 +4,34 @@ var db = require("../config/connection");
 //console.log(db);
 
 module.exports = function(app) {
-  app.post("/savenote/:id", function(req, res){
-    var savedId = req.params.id;
-    db.myModels.Note.findOneAndUpdate({
-      "_id": savedId
-    },{
-      title: res.body
+  app.post("/savenote/:id", function(req, res) {
+    console.log(req.body);
+    var newNote = new db.myModels.Note(req.body);
+
+    newNote.save(function(err, doc) {
+      if (err) {
+        console.log(err);
+      } else {
+        db.myModels.Article.findOneAndUpdate({
+            "_id": req.params.id
+          }, {
+            "note": doc._id
+          })
+          .exec(function(error, doc) {
+            if (error) {
+              console.log(error);
+            } else {
+              res.status(200).json({
+                success: true,
+                doc: doc
+              });
+            }
+          });
+      }
     });
   });
+
+
   //Route for saving articles
   app.put("/:id", function(req, res) {
     var savedId = req.params.id;
@@ -24,7 +44,9 @@ module.exports = function(app) {
         console.log(err);
         return res.status(500).end();
       }
-      res.status(200).json({success: true});
+      res.status(200).json({
+        success: true
+      });
     });
 
   });
